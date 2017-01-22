@@ -1,2 +1,2 @@
-# kn-
+# knæ
 A programming language
