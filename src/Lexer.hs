@@ -21,10 +21,10 @@ lexer = Tok.makeTokenParser style
       ]
 
     style = emptyDef
-      [ Tok.commentLine = "$"
+      { Tok.commentLine = "$"
       , Tok.reservedOpNames = ops
       , Tok.reservedNames = names
-      ]
+        }
 
 integer :: Parser Integer
 integer =
@@ -38,7 +38,11 @@ parens :: Parser a -> Parser a
 parens =
   Tok.parens lexer
 
-semiSep :: Parser a -> Parser a
+commaSep :: Parser a -> Parser [a]
+commaSep =
+  Tok.commaSep lexer
+
+semiSep :: Parser a -> Parser [a]
 semiSep =
   Tok.semiSep lexer
 

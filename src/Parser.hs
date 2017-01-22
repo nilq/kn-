@@ -44,7 +44,7 @@ variable = do
 
 function :: Parser Expr
 function = do
-  reserved "def"
+  reserved "func"
   name <- identifier
   args <- parens $ many variable
   body <- expr
@@ -52,7 +52,7 @@ function = do
 
 extern :: Parser Expr
 extern = do
-  reserved "extern"
+  reserved "giveme"
   name <- identifier
   args <- parens $ many variable
   return $ Extern name args
@@ -72,12 +72,17 @@ factor =
   <|> try call
   <|> variable
 
+defn :: Parser Expr
+defn = try extern
+  <|> try function
+  <|> expr
+
 contents :: Parser a -> Parser a
 contents p = do
   Tok.whiteSpace lexer
   r <- p
   eof
-  return f
+  return r
 
 toplevel :: Parser [Expr]
 toplevel = many $ do
