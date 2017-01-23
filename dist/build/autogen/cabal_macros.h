@@ -7,12 +7,26 @@
   (major1) == 4 && (major2) <  8 || \
   (major1) == 4 && (major2) == 8 && (minor) <= 2)
 
+/* package containers-0.5.6.2 */
+#define VERSION_containers "0.5.6.2"
+#define MIN_VERSION_containers(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  5 || \
+  (major1) == 0 && (major2) == 5 && (minor) <= 6)
+
 /* package haskeline-0.7.2.1 */
 #define VERSION_haskeline "0.7.2.1"
 #define MIN_VERSION_haskeline(major1,major2,minor) (\
   (major1) <  0 || \
   (major1) == 0 && (major2) <  7 || \
   (major1) == 0 && (major2) == 7 && (minor) <= 2)
+
+/* package llvm-general-pure-3.5.1.0 */
+#define VERSION_llvm_general_pure "3.5.1.0"
+#define MIN_VERSION_llvm_general_pure(major1,major2,minor) (\
+  (major1) <  3 || \
+  (major1) == 3 && (major2) <  5 || \
+  (major1) == 3 && (major2) == 5 && (minor) <= 1)
 
 /* package mtl-2.2.1 */
 #define VERSION_mtl "2.2.1"
@@ -105,5 +119,5 @@
   (major1) == 2 && (major2) <  26 || \
   (major1) == 2 && (major2) == 26 && (minor) <= 0)
 
-#define CURRENT_PACKAGE_KEY "kn_7i5csQMjBWY8TxfuFQ34MW"
+#define CURRENT_PACKAGE_KEY "kn_9GeFyQHfNd73GBglMHvVNB"
 

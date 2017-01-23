@@ -4,7 +4,7 @@ import LLVM.General.Module
 import LLVM.General.Context
 
 import qualified LLVM.General.AST as AST
-import qualified LLVM.General.Constant as C
+import qualified LLVM.General.AST.Constant as C
 import qualified LLVM.General.AST.Float as F
 import qualified LLVM.General.AST.FloatingPointPredicate as FP
 

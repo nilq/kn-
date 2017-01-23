@@ -1,6 +1,6 @@
 module Codegen where
 
-import Data.World
+import Data.Word
 import Data.String
 import Data.List
 import Data.Function
