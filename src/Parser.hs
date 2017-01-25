@@ -38,8 +38,7 @@ expr =
 
 variable :: Parser Expr
 variable = do
-  var <- identifier
-  return $ Var var
+  Var <$> identifier
 
 function :: Parser Expr
 function = do
@@ -66,10 +65,9 @@ factor :: Parser Expr
 factor =
       try floating
   <|> try int
-  <|> try extern
-  <|> try function
   <|> try call
-  <|> variable
+  <|> try variable
+  <|> (parens expr)
 
 defn :: Parser Expr
 defn = try extern

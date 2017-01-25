@@ -21,9 +21,9 @@ import qualified LLVM.General.AST.Attribute as A
 import qualified LLVM.General.AST.CallingConvention as CC
 import qualified LLVM.General.AST.FloatingPointPredicate as FP
 
-newtype LLVM a =
-  LLVM { unLLVM :: State AST.Module a
-       } deriving (Functor, Applicative, Monad, MonadState AST.Module)
+-- Module
+newtype LLVM a = LLVM { unLLVM :: State AST.Module a
+                      } deriving (Functor, Applicative, Monad, MonadState AST.Module )
 
 runLLVM :: AST.Module -> LLVM a -> AST.Module
 runLLVM =
@@ -31,36 +31,36 @@ runLLVM =
 
 emptyModule :: String -> AST.Module
 emptyModule label =
-  defaultModule { moduleName = label
-                }
+  defaultModule { moduleName = label }
 
 addDefn :: Definition -> LLVM ()
 addDefn d = do
   defs <- gets moduleDefinitions
-  modify $ \s -> s { moduleDefinitions = defs ++ [d]
-                   }
+  modify $ \s -> s { moduleDefinitions = defs ++ [d] }
 
-define :: Type -> String -> [(Type, AST.Name)] -> [BasicBlock] -> LLVM ()
-define retty label argtys body = addDefn $
-  GlobalDefinition $ functionDefaults { name        = Name label
-                                      , parameters  = ([Parameter ty nm [] | (ty, nm) <- argtys], False)
-                                      , returnType  = retty
-                                      , basicBlocks = []
-                                      }
+define ::  Type -> String -> [(Type, Name)] -> [BasicBlock] -> LLVM ()
+define retty label argtys body =
+  addDefn $ GlobalDefinition $ functionDefaults { name        = Name label
+                                                , parameters  = ([Parameter ty nm [] | (ty, nm) <- argtys], False)
+                                                , returnType  = retty
+                                                , basicBlocks = body
+                                                }
 
-external :: Type -> String -> [(Type, Name)] -> LLVM ()
-external retty label argtys =
-  addDefn $ GlobalDefinition $ functionDefaults
-    { name = Name label
-    , parameters = ([Parameter ty nm [] | (ty, nm) <- argtys], False)
-    , returnType = retty
-    , basicBlocks = []
-    }
+external ::  Type -> String -> [(Type, Name)] -> LLVM ()
+external retty label argtys = addDefn $
+  GlobalDefinition $ functionDefaults {
+    name        = Name label
+  , parameters  = ([Parameter ty nm [] | (ty, nm) <- argtys], False)
+  , returnType  = retty
+  , basicBlocks = []
+  }
 
+-- Type
 double :: Type
 double =
   FloatingPointType 64 IEEE
 
+-- Names
 type Names =
   Map.Map String Int
 
@@ -74,6 +74,7 @@ instance IsString Name where
   fromString =
     Name . fromString
 
+-- Codegen state
 type SymbolTable =
   [ ( String
     , Operand
@@ -94,7 +95,6 @@ data BlockState = BlockState { idx   :: Int
                              } deriving Show
 
 -- Codegen operations
-
 newtype Codegen a = Codegen { runCodegen :: State CodegenState a
                             } deriving (Functor, Applicative, Monad, MonadState CodegenState)
 
@@ -158,7 +158,6 @@ terminator trm = do
   return trm
 
 -- Block state
-
 entry :: Codegen Name
 entry =
   gets currentBlock
@@ -201,6 +200,7 @@ current = do
     Just x  -> return x
     Nothing -> error $ "Fucked up non-existing block: " ++ show c
 
+-- Symbol table
 assign :: String -> Operand -> Codegen ()
 assign var x = do
   lcls <- gets symtab
@@ -216,7 +216,6 @@ getvar var = do
     Nothing -> error $ "Local variable is nowhere to be found: " ++ show var
 
 -- References
-
 local :: Name -> Operand
 local =
   LocalReference double
@@ -229,6 +228,7 @@ externf :: Name -> Operand
 externf =
   ConstantOperand . C.GlobalReference double
 
+-- Arithmetics
 fadd :: Operand -> Operand -> Codegen Operand
 fadd a b =
   instr $ FAdd NoFastMathFlags a b []
@@ -261,6 +261,7 @@ toArgs :: [Operand] -> [(Operand, [A.ParameterAttribute])]
 toArgs =
   map (\x -> (x, []))
 
+-- Effects
 call :: Operand -> [Operand] -> Codegen Operand
 call fn args =
   instr $ Call Nothing CC.C [] (Right fn) (toArgs args) [] []
@@ -277,6 +278,7 @@ load :: Operand -> Codegen Operand
 load ptr =
   instr $ Load False ptr Nothing 0 []
 
+-- Control flow
 br :: Name -> Codegen (Named Terminator)
 br val =
   terminator $ Do $ Br val []
