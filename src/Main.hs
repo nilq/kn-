@@ -14,7 +14,7 @@ import qualified LLVM.General.AST as AST
 
 initModule :: AST.Module
 initModule =
-  emptyModule "The kn- JIT"
+  emptyModule "The Knæ Language"
 
 process :: AST.Module -> String -> IO (Maybe AST.Module)
 process modo source = do
