@@ -1,10 +1,12 @@
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 module Codegen where
 
 import Data.Word
 import Data.String
 import Data.List
 import Data.Function
-
 import qualified Data.Map as Map
 
 import Control.Monad.State
@@ -14,7 +16,7 @@ import LLVM.General.AST
 import LLVM.General.AST.Global
 import qualified LLVM.General.AST as AST
 
-import qualified LLVM.General.AST.Constant  as C
+import qualified LLVM.General.AST.Constant as C
 import qualified LLVM.General.AST.Attribute as A
 import qualified LLVM.General.AST.CallingConvention as CC
 import qualified LLVM.General.AST.FloatingPointPredicate as FP
@@ -38,7 +40,7 @@ addDefn d = do
   modify $ \s -> s { moduleDefinitions = defs ++ [d]
                    }
 
-define :: Type -> String -> [(Type, Name)] -> LLVM ()
+define :: Type -> String -> [(Type, AST.Name)] -> [BasicBlock] -> LLVM ()
 define retty label argtys body = addDefn $
   GlobalDefinition $ functionDefaults { name        = Name label
                                       , parameters  = ([Parameter ty nm [] | (ty, nm) <- argtys], False)
@@ -50,7 +52,7 @@ double :: Type
 double =
   FloatingPointType 64 IEEE
 
-type Name =
+type Names =
   Map.Map String Int
 
 uniqueName :: String -> Names -> (String, Names)
@@ -85,13 +87,13 @@ data BlockState = BlockState { idx   :: Int
 -- Codegen operations
 
 newtype Codegen a = Codegen { runCodegen :: State CodegenState a
-                            }
+                            } deriving (Functor, Applicative, Monad, MonadState CodegenState)
 
 sortBlocks :: [(Name, BlockState)] -> [(Name, BlockState)]
 sortBlocks =
   sortBy (compare `on` (idx . snd))
 
-createBlocks :: Codegen -> [BasicBlock]
+createBlocks :: CodegenState -> [BasicBlock]
 createBlocks m =
   map makeBlock $ sortBlocks $ Map.toList (blocks m)
 
@@ -123,8 +125,9 @@ execCodegen m =
 fresh :: Codegen Word
 fresh = do
   i <- gets count
-  modify $ \s -> s { count = 1 + 1
-}
+  modify $ \s -> s { count = 1 + i
+                   }
+  return $ i + 1
 
 instr :: Instruction -> Codegen (Operand)
 instr ins = do
@@ -153,15 +156,14 @@ entry =
 
 addBlock :: String -> Codegen Name
 addBlock bname = do
-  bls  <- gets blocks
-  ix   <- gets blockCount
-  nms  <- gets name
-
-  let new =
-    emptyBlock ix
+  bls <- gets blocks
+  ix <- gets blockCount
+  nms <- gets names
+  let new = emptyBlock ix
       (qname, supply) = uniqueName bname nms
-
-  modify $ \s -> s { currentBlock = bname
+  modify $ \s -> s { blocks = Map.insert (Name qname) new bls
+                   , blockCount = ix + 1
+                   , names = supply
                    }
   return (Name qname)
 
@@ -177,8 +179,8 @@ getBlock =
 
 modifyBlock :: BlockState -> Codegen ()
 modifyBlock new = do
-  active <- get currentBlock
-  modify $ \s -> s { blocks = Map.insert active new (block s)
+  active <- gets currentBlock
+  modify $ \s -> s { blocks = Map.insert active new (blocks s)
                    }
 
 current :: Codegen BlockState
@@ -208,7 +210,7 @@ getvar var = do
 
 local :: Name -> Operand
 local =
-  LocalReference.double
+  LocalReference double
 
 global :: Name -> C.Constant
 global =

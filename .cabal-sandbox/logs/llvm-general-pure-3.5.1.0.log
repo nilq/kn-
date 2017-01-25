@@ -1,0 +1,37 @@
+Configuring llvm-general-pure-3.5.1.0...
+Building llvm-general-pure-3.5.1.0...
+Preprocessing library llvm-general-pure-3.5.1.0...
+[ 1 of 28] Compiling LLVM.General.TH  ( src/LLVM/General/TH.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/TH.o )
+[ 2 of 28] Compiling LLVM.General.AST.Float ( src/LLVM/General/AST/Float.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Float.o )
+[ 3 of 28] Compiling LLVM.General.Prelude ( src/LLVM/General/Prelude.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/Prelude.o )
+[ 4 of 28] Compiling LLVM.General.AST.COMDAT ( src/LLVM/General/AST/COMDAT.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/COMDAT.o )
+[ 5 of 28] Compiling LLVM.General.AST.AddrSpace ( src/LLVM/General/AST/AddrSpace.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/AddrSpace.o )
+[ 6 of 28] Compiling LLVM.General.AST.DataLayout ( src/LLVM/General/AST/DataLayout.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/DataLayout.o )
+[ 7 of 28] Compiling LLVM.General.AST.ParameterAttribute ( src/LLVM/General/AST/ParameterAttribute.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/ParameterAttribute.o )
+[ 8 of 28] Compiling LLVM.General.AST.FunctionAttribute ( src/LLVM/General/AST/FunctionAttribute.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/FunctionAttribute.o )
+[ 9 of 28] Compiling LLVM.General.AST.Attribute ( src/LLVM/General/AST/Attribute.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Attribute.o )
+[10 of 28] Compiling LLVM.General.AST.CallingConvention ( src/LLVM/General/AST/CallingConvention.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/CallingConvention.o )
+[11 of 28] Compiling LLVM.General.AST.FloatingPointPredicate ( src/LLVM/General/AST/FloatingPointPredicate.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/FloatingPointPredicate.o )
+[12 of 28] Compiling LLVM.General.AST.IntegerPredicate ( src/LLVM/General/AST/IntegerPredicate.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/IntegerPredicate.o )
+[13 of 28] Compiling LLVM.General.AST.Linkage ( src/LLVM/General/AST/Linkage.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Linkage.o )
+[14 of 28] Compiling LLVM.General.AST.Visibility ( src/LLVM/General/AST/Visibility.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Visibility.o )
+[15 of 28] Compiling LLVM.General.AST.DLL ( src/LLVM/General/AST/DLL.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/DLL.o )
+[16 of 28] Compiling LLVM.General.AST.ThreadLocalStorage ( src/LLVM/General/AST/ThreadLocalStorage.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/ThreadLocalStorage.o )
+[17 of 28] Compiling LLVM.General.AST.RMWOperation ( src/LLVM/General/AST/RMWOperation.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/RMWOperation.o )
+[18 of 28] Compiling LLVM.General.DataLayout ( src/LLVM/General/DataLayout.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/DataLayout.o )
+[19 of 28] Compiling LLVM.General.Internal.PrettyPrint ( src/LLVM/General/Internal/PrettyPrint.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/Internal/PrettyPrint.o )
+[20 of 28] Compiling LLVM.General.AST.Name ( src/LLVM/General/AST/Name.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Name.o )
+[21 of 28] Compiling LLVM.General.AST.Type ( src/LLVM/General/AST/Type.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Type.o )
+[22 of 28] Compiling LLVM.General.AST.InlineAssembly ( src/LLVM/General/AST/InlineAssembly.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/InlineAssembly.o )
+[23 of 28] Compiling LLVM.General.AST.Constant ( src/LLVM/General/AST/Constant.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Constant.o )
+[24 of 28] Compiling LLVM.General.AST.Operand ( src/LLVM/General/AST/Operand.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Operand.o )
+[25 of 28] Compiling LLVM.General.AST.Instruction ( src/LLVM/General/AST/Instruction.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Instruction.o )
+[26 of 28] Compiling LLVM.General.AST.Global ( src/LLVM/General/AST/Global.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST/Global.o )
+[27 of 28] Compiling LLVM.General.AST ( src/LLVM/General/AST.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/AST.o )
+[28 of 28] Compiling LLVM.General.PrettyPrint ( src/LLVM/General/PrettyPrint.hs, dist/dist-sandbox-90203a8c/build/LLVM/General/PrettyPrint.o )
+In-place registering llvm-general-pure-3.5.1.0...
+Creating package registration file:
+/tmp/pkgConf-llvm-general-pure-3.5.12145174067468703135.0
+Installing library in
+/home/niels/Hacking/Haskell/kn-/.cabal-sandbox/lib/x86_64-linux-ghc-7.10.3/llvm-general-pure-3.5.1.0-IK0H8e2OU1pDJ3xIcVPKDv
+Registering llvm-general-pure-3.5.1.0...
