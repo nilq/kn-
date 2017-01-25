@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Emit where
 
 import LLVM.General.Module
@@ -10,10 +12,8 @@ import qualified LLVM.General.AST.FloatingPointPredicate as FP
 
 import Data.Word
 import Data.Int
-
 import Control.Monad.Except
 import Control.Applicative
-
 import qualified Data.Map as Map
 
 import Codegen
