@@ -15,11 +15,11 @@ int = do
   return $ Float (fromInteger n)
 
 floating :: Parser Expr
-float =
+floating =
   Float <$> float
 
-binary s f assoc =
-  Ex.Infix (reservedOp s >> return (BinOp f)) assoc
+binary s assoc =
+  Ex.Infix (reservedOp s >> return (BinaryOp s)) assoc
 
 binops =
   [
@@ -32,14 +32,9 @@ binops =
     ]
   ]
 
-
-floating :: Parser Expr
-floating = do
-  Float <$> float
-
 expr :: Parser Expr
 expr =
-  Ex.buildExpressionParser table factor
+  Ex.buildExpressionParser binops factor
 
 variable :: Parser Expr
 variable = do
@@ -50,15 +45,15 @@ function :: Parser Expr
 function = do
   reserved "func"
   name <- identifier
-  args <- parens $ many variable
+  args <- parens $ many identifier
   body <- expr
-  return $ Extern name args
+  return $ Function name args body
 
 extern :: Parser Expr
 extern = do
-  reserved "import"
+  reserved "summon"
   name <- identifier
-  args <- parens $ many variable
+  args <- parens $ many identifier
   return $ Extern name args
 
 call :: Parser Expr
