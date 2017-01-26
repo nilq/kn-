@@ -31,6 +31,9 @@ binops =
     [ binary "+" Ex.AssocLeft
     , binary "-" Ex.AssocLeft
     ]
+    ,
+    [ binary "<" Ex.AssocLeft
+    ]
   ]
 
 expr :: Parser Expr
@@ -65,13 +68,13 @@ call = do
 ifthen :: Parser Expr
 ifthen = do
   reserved "if"
-  conf     <- expr
+  cond    <- expr
   reserved "then"
   tr       <- expr
   reserved "else"
   fl       <- expr
 
-  return $ If conf tr fl
+  return $ If cond tr fl
 
 for :: Parser Expr
 for = do
@@ -118,8 +121,8 @@ toplevel = many $ do
 
 parseExpr :: String -> Either ParseError Expr
 parseExpr s =
-  parse (contents expr) "<stdin>" s
+  parse (contents expr) "<you fucked up>" s
 
 parseTopLevel :: String -> Either ParseError [Expr]
 parseTopLevel s =
-  parse (contents toplevel) "<stdnin>" s
+  parse (contents toplevel) "<you fucked up>" s
