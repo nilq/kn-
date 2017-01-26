@@ -95,6 +95,7 @@ factor =
   <|> try call
   <|> try variable
   <|> ifthen
+  <|> for
   <|> (parens expr)
 
 defn :: Parser Expr

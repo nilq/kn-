@@ -118,6 +118,31 @@ cgen (S.If cond tr fl) = do
   setBlock ifexit
   phi double [(trval, ifthen), (flval, ifelse)]
 
+cgen (S.For ivar start cond step body) = do
+  forloop <- addBlock "for.loop"
+  forexit <- addBlock "for.exit"
+
+  i <- alloca double
+  istart <- cgen start
+  stepval <- cgen step
+
+  store i istart
+  assign ivar i
+  br forloop
+
+  setBlock forloop
+  cgen body
+  ival <- load i
+  inext <- fadd ival stepval
+  store i inext
+
+  cond <- cgen cond
+  test <- fcmp FP.ONE false cond
+  cbr test forloop forexit
+
+  setBlock forexit
+  return zero
+
 codegen :: AST.Module -> [S.Expr] -> IO AST.Module
 codegen mod fns = do
   res <- runJIT oldast
