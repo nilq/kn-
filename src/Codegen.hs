@@ -287,6 +287,10 @@ cbr :: Operand -> Name -> Name -> Codegen (Named Terminator)
 cbr cond tr fl =
   terminator $ Do $ CondBr cond tr fl []
 
+phi :: Type -> [(Operand, Name)] -> Codegen Operand
+phi ty incoming =
+  instr $ Phi ty incoming []
+
 ret :: Operand -> Codegen (Named Terminator)
 ret val =
   terminator $ Do $ Ret (Just val) []

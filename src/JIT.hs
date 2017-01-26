@@ -27,12 +27,12 @@ run fn =
 
 jit :: Context -> (EE.MCJIT -> IO a) -> IO a
 jit c =
-  EE.withMCJIT c optLevel model ptrelim fastins
+  EE.withMCJIT c optlevel model ptrelim fastins
   where
     optlevel = Just 0
     model    = Nothing
     ptrelim  = Nothing
-    fastings = Nothing
+    fastins = Nothing
 
 passes :: PassSetSpec
 passes =

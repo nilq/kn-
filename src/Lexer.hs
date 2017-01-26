@@ -13,18 +13,23 @@ lexer = Tok.makeTokenParser style
       , "*"
       , "-"
       , ";"
+      , ","
+      , "<"
       ]
 
     names =
       [ "func"
-      , "giveme"
+      , "summon"
+      , "if"
+      , "then"
+      , "else"
       ]
 
     style = emptyDef
       { Tok.commentLine = "#"
       , Tok.reservedOpNames = ops
       , Tok.reservedNames = names
-        }
+      }
 
 integer =
   Tok.integer lexer

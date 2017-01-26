@@ -2,6 +2,7 @@ module Parser where
 
 import Text.Parsec
 import Text.Parsec.String (Parser)
+import Control.Applicative ((<$>))
 
 import qualified Text.Parsec.Expr  as Ex
 import qualified Text.Parsec.Token as Tok
@@ -61,12 +62,39 @@ call = do
   args <- parens $ commaSep expr
   return $ Call name args
 
+ifthen :: Parser Expr
+ifthen = do
+  reserved "if"
+  conf     <- expr
+  reserved "then"
+  tr       <- expr
+  reserved "else"
+  fl       <- expr
+
+  return $ If conf tr fl
+
+for :: Parser Expr
+for = do
+  reserved "for"
+  var <- identifier
+  reservedOp "="
+  start <- expr
+  reservedOp ","
+  cond <- expr
+  reservedOp ","
+  step <- expr
+  reserved "in"
+  body <- expr
+
+  return $ For var start cond step body
+
 factor :: Parser Expr
 factor =
       try floating
   <|> try int
   <|> try call
   <|> try variable
+  <|> ifthen
   <|> (parens expr)
 
 defn :: Parser Expr

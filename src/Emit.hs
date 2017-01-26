@@ -17,7 +17,20 @@ import Control.Applicative
 import qualified Data.Map as Map
 
 import Codegen
+import JIT
 import qualified Syntax as S
+
+one
+  = cons $ C.Float (F.Double 1.0)
+
+zero
+  = cons $ C.Float (F.Double 0.0)
+
+false
+  = zero
+
+true
+  = one
 
 toSig :: [String] -> [(AST.Type, AST.Name)]
 toSig =
@@ -65,16 +78,6 @@ binops = Map.fromList [ ("+", fadd)
                       ]
 
 cgen :: S.Expr -> Codegen AST.Operand
-cgen (S.UnaryOp op a) = do
-  cgen $ S.Call ("unary" ++ op) [a]
-
-cgen (S.BinaryOp "=" (S.Var var) val) = do
-  a    <- getvar var
-  cval <- cgen val
-  store a cval
-
-  return cval
-
 cgen (S.BinaryOp op a b) = do
   case Map.lookup op binops of
     Just f -> do
@@ -93,16 +96,34 @@ cgen (S.Call fn args) = do
   largs <- mapM cgen args
   call (externf (AST.Name fn)) largs
 
-liftError :: ExceptT String IO a -> IO a
-liftError =
-  runExceptT >=> either fail return
+cgen (S.If cond tr fl) = do
+  ifthen <- addBlock "if.then"
+  ifelse <- addBlock "if.else"
+  ifexit <- addBlock "if.exit"
+
+  cond <- cgen cond
+  test <- fcmp FP.ONE false cond
+  cbr test ifthen ifelse
+
+  setBlock ifthen
+  trval <- cgen tr
+  br ifexit
+  ifthen <- getBlock
+
+  setBlock ifelse
+  flval <- cgen fl
+  br ifexit
+  ifelse <- getBlock
+
+  setBlock ifexit
+  phi double [(trval, ifthen), (flval, ifelse)]
 
 codegen :: AST.Module -> [S.Expr] -> IO AST.Module
-codegen mod fns = withContext $ \context ->
-  liftError $ withModuleFromAST context newast $ \m -> do
-    llstr <- moduleLLVMAssembly m
-    putStrLn llstr
-    return newast
+codegen mod fns = do
+  res <- runJIT oldast
+  case res of
+    Right newast -> return newast
+    Left err     -> putStrLn err >> return oldast
   where
     modn   = mapM codegenTop fns
-    newast = runLLVM mod modn
+    oldast = runLLVM mod modn
